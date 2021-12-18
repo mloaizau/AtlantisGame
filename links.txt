@@ -1,2 +1,4 @@
 links de ayuda
+
 http://lets-gamedev.de/phasereasings/
+https://phaser.io/examples/v2/audio/audio-sprite-duration
