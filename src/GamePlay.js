@@ -90,6 +90,23 @@ GamePlayManager = {
 
         this.scoreText = game.add.text(game.width/2, 40, '0', style);
         this.scoreText.anchor.setTo(0.5);
+
+        this.totalTime = 10;
+        this.timerText = game.add.text(1000, 40, this.totalTime, style);
+        this.timerText.anchor.setTo(0.5);
+
+        //crea un timer que avanza cada segundo
+        this.timerGameOver = game.time.events.loop(Phaser.Timer.SECOND, function(){
+            if (this.flagFirstMouseDown) {
+                this.totalTime--;
+                this.timerText.text = this.totalTime+'';
+                if (this.totalTime <= 0) {
+                    game.time.events.remove(this.timerGameOver);
+                    this.endGame = true;
+                    this.showFinalMessage("GAME OVER");
+                }
+            }
+        }, this);
     },
     increaseScore: function(){
         this.currentScore += 100;
@@ -97,6 +114,7 @@ GamePlayManager = {
 
         this.amountDiamondsCaught += 1;
         if (this.amountDiamondsCaught >= AMOUNT_DIAMONDS) {
+            game.time.events.remove(this.timerGameOver);
             this.endGame = true;
             this.showFinalMessage('CONGRATULATIONS');
         }
