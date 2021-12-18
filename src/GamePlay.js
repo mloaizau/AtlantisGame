@@ -13,6 +13,9 @@ GamePlayManager = {
     preload: function() {
         game.load.image("background", 'assets/images/background.png'); //imagen normal
         game.load.image("explosion", 'assets/images/explosion.png');
+        game.load.image("shark", 'assets/images/shark.png');
+        game.load.image("fishes", 'assets/images/fishes.png');
+        game.load.image("mollusk", 'assets/images/mollusk.png');
         // el sprite consta de tres variables, ancho, alto y cantidad de imagenes
         game.load.spritesheet('horse', 'assets/images/horse.png', 84, 156, 2); 
         game.load.spritesheet('diamonds', 'assets/images/diamonds.png', 81, 84, 4);
@@ -20,6 +23,11 @@ GamePlayManager = {
     },
     create: function() {
         game.add.sprite(0, 0, 'background'); //añade una imagen en una coordenada especifica
+
+        this.mollusk = game.add.sprite(500,150,'mollusk');
+        this.shark = game.add.sprite(500,20,'shark'); //el orden en el que se agregan los sprites importan
+        this.fishes = game.add.sprite(100,550,'fishes');
+
         this.horse = game.add.sprite(0, 0, 'horse'); //añade un sprite
         this.horse.frame = 0; // del sprite queremos la imagen 1 o 2
         this.horse.x = game.width/2; //centra el sprite 
@@ -91,7 +99,7 @@ GamePlayManager = {
         this.scoreText = game.add.text(game.width/2, 40, '0', style);
         this.scoreText.anchor.setTo(0.5);
 
-        this.totalTime = 10;
+        this.totalTime = 60;
         this.timerText = game.add.text(1000, 40, this.totalTime, style);
         this.timerText.anchor.setTo(0.5);
 
@@ -120,6 +128,7 @@ GamePlayManager = {
         }
     },
     showFinalMessage: function(msg){
+        this.tweenMollusk.stop();
         var bgAlpha = game.add.bitmapData(game.width, game.height);
         bgAlpha.ctx.fillStyle = '#000000';
         bgAlpha.ctx.fillRect(0, 0, game.width, game.height);
@@ -137,8 +146,12 @@ GamePlayManager = {
         this.textFieldFinalMsg.anchor.setTo(0.5);
     },
     onTap: function(){
+        if (!this.flagFirstMouseDown) {
+            this.tweenMollusk = game.add.tween(this.mollusk.position).to({y:-0.001},
+                5800, Phaser.Easing.Cubic.InOut, true, 0, 1000, true).loop(true);
+        }
         this.flagFirstMouseDown = true;
-        this.horse.frame = 1;
+        // this.horse.frame = 1;
     },
     getBoundsDiamond: function(currentDiamond){
         //decuelve un rectangulo con las coordenadas que esta utilizando el sprite (diamante)
@@ -182,6 +195,19 @@ GamePlayManager = {
     },
     update: function() {
         if(this.flagFirstMouseDown && !this.endGame){
+
+            //movimiento del tiburon
+            this.shark.x--;
+            if (this.shark.x < -300) {
+                this.shark.x = 1300;
+            }
+
+            //movimiento de los peces
+            this.fishes.x += 0.3;
+            if (this.fishes > 1300) {
+                this.fishes.x = -300;
+            }
+
             // this.horse.angle += 1; // animacion, suma un angulo dando la sensacion de rotacion
             var pointerX = game.input.x;
             var pointerY = game.input.y;
