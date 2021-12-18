@@ -124,7 +124,7 @@ GamePlayManager = {
         this.scoreText = game.add.text(game.width/2, 40, '0', style);
         this.scoreText.anchor.setTo(0.5);
 
-        this.totalTime = 60;
+        this.totalTime = 15;
         this.timerText = game.add.text(1000, 40, this.totalTime, style);
         this.timerText.anchor.setTo(0.5);
 
