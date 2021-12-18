@@ -1,5 +1,6 @@
 
 var AMOUNT_DIAMONDS = 20;
+var AMOUNT_BOOBLES = 30;
 GamePlayManager = {
     init: function() {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -9,13 +10,18 @@ GamePlayManager = {
         this.flagFirstMouseDown = false; // se crea este flag para que el caballo no se mueva al iniciar 
         this.amountDiamondsCaught = 0;
         this.endGame = false;
+        this.countSmile = -1;
     },
     preload: function() {
-        game.load.image("background", 'assets/images/background.png'); //imagen normal
+        //imagenes normales
+        game.load.image("background", 'assets/images/background.png'); 
         game.load.image("explosion", 'assets/images/explosion.png');
         game.load.image("shark", 'assets/images/shark.png');
         game.load.image("fishes", 'assets/images/fishes.png');
         game.load.image("mollusk", 'assets/images/mollusk.png');
+        game.load.image("booble1", 'assets/images/booble1.png');
+        game.load.image("booble2", 'assets/images/booble2.png');
+
         // el sprite consta de tres variables, ancho, alto y cantidad de imagenes
         game.load.spritesheet('horse', 'assets/images/horse.png', 84, 156, 2); 
         game.load.spritesheet('diamonds', 'assets/images/diamonds.png', 81, 84, 4);
@@ -23,6 +29,19 @@ GamePlayManager = {
     },
     create: function() {
         game.add.sprite(0, 0, 'background'); //añade una imagen en una coordenada especifica
+
+        this.boobleArray = [];
+        for(var i = 0; i < AMOUNT_BOOBLES; i++){
+            var xBooble = game.rnd.integerInRange(1, 1140);
+            var yBooble = game.rnd.integerInRange(600, 950);
+
+            //Aleatoriamente agrega el booble1 o el booble2
+            var booble = game.add.sprite(xBooble, yBooble, 'booble' + game.rnd.integerInRange(1,2));
+            booble.vel = 0.2 + game.rnd.frac() * 2; //velocidad
+            booble.alpha = 0.9;
+            booble.scale.setTo(0.2 + game.rnd.frac());
+            this.boobleArray[i] = booble;
+        }
 
         this.mollusk = game.add.sprite(500,150,'mollusk');
         this.shark = game.add.sprite(500,20,'shark'); //el orden en el que se agregan los sprites importan
@@ -117,6 +136,9 @@ GamePlayManager = {
         }, this);
     },
     increaseScore: function(){
+        this.countSmile = 0;
+        this.horse.frame = 1;
+
         this.currentScore += 100;
         this.scoreText.text = this.currentScore;
 
@@ -151,7 +173,6 @@ GamePlayManager = {
                 5800, Phaser.Easing.Cubic.InOut, true, 0, 1000, true).loop(true);
         }
         this.flagFirstMouseDown = true;
-        // this.horse.frame = 1;
     },
     getBoundsDiamond: function(currentDiamond){
         //decuelve un rectangulo con las coordenadas que esta utilizando el sprite (diamante)
@@ -196,6 +217,16 @@ GamePlayManager = {
     update: function() {
         if(this.flagFirstMouseDown && !this.endGame){
 
+            //movimiento de burbujas
+            for(var i=0; i < AMOUNT_BOOBLES; i++){
+                var booble = this.boobleArray[i];
+                booble.y -= booble.vel;
+                if (booble.y < -50) {
+                    booble.y = 700;
+                    booble.x = game.rnd.integerInRange(1,1140);
+                }
+            }
+
             //movimiento del tiburon
             this.shark.x--;
             if (this.shark.x < -300) {
@@ -206,6 +237,15 @@ GamePlayManager = {
             this.fishes.x += 0.3;
             if (this.fishes > 1300) {
                 this.fishes.x = -300;
+            }
+
+            //cambiando el sprite del caballo
+            if(this.countSmile >= 0){
+                this.countSmile++;
+                if (this.countSmile > 50) {
+                    this.countSmile = -1;
+                    this.horse.frame = 0;
+                }
             }
 
             // this.horse.angle += 1; // animacion, suma un angulo dando la sensacion de rotacion
