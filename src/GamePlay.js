@@ -26,9 +26,15 @@ GamePlayManager = {
         game.load.spritesheet('horse', 'assets/images/horse.png', 84, 156, 2); 
         game.load.spritesheet('diamonds', 'assets/images/diamonds.png', 81, 84, 4);
 
+        //agregando sonidos
+        game.load.audio('musicLoop', 'assets/sounds/musicLoop.mp3');
+        game.load.audio('sfxPop', 'assets/sounds/sfxPop.mp3');
+
     },
     create: function() {
         game.add.sprite(0, 0, 'background'); //añade una imagen en una coordenada especifica
+        this.musicLoop = game.add.audio('musicLoop');
+        this.sfxPop = game.add.audio('sfxPop');
 
         this.boobleArray = [];
         for(var i = 0; i < AMOUNT_BOOBLES; i++){
@@ -151,6 +157,7 @@ GamePlayManager = {
     },
     showFinalMessage: function(msg){
         this.tweenMollusk.stop();
+        this.musicLoop.stop();
         var bgAlpha = game.add.bitmapData(game.width, game.height);
         bgAlpha.ctx.fillStyle = '#000000';
         bgAlpha.ctx.fillRect(0, 0, game.width, game.height);
@@ -169,6 +176,7 @@ GamePlayManager = {
     },
     onTap: function(){
         if (!this.flagFirstMouseDown) {
+            this.musicLoop.play('', 0, 0.2, true);//marcador de audio, donde inicia, volumen, ciclo
             this.tweenMollusk = game.add.tween(this.mollusk.position).to({y:-0.001},
                 5800, Phaser.Easing.Cubic.InOut, true, 0, 1000, true).loop(true);
         }
@@ -275,6 +283,7 @@ GamePlayManager = {
                 var rectDiamond = this.getBoundsDiamond(this.diamonds[i]);
                 if(this.diamonds[i].visible && this.isRectanglesOverlapping(rectHorse, rectDiamond)){
                     this.increaseScore();
+                    this.sfxPop.play('', 0, 1, false);//marcador de audio, donde inicia, volumen, ciclo
                     this.diamonds[i].visible = false;
                     var explosion = this.explosionGroup.getFirstDead();
                     if(explosion != null){
