@@ -2,13 +2,21 @@
 
 Controla a un caballo de mar, mediante el mouse si estás desde el ordenador o tocando la pantalla si estás desde un teléfono. El objetivo del juego es sencillo, atrapa todos los diamantes de la pantalla antes de que se te agote el tiempo.
 
+Pruébalo aquí: https://mloaizau.github.io/AtlantisGame/
+
 ## Desktop
-
-<img width="400px"  src="https://github.com/no-te-rindas/imagenes/blob/main/Readmes/striped/striped-desktop.png?raw=true" />
-
+<div>
+<img width="300px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/demo1.png?raw=true" />
+<img width="300px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/demo2.png?raw=true" />
+<img width="300px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/gameover.png?raw=true" />
+</div>
+  
 ## Mobile
-
-<img width="280px"  src="https://github.com/no-te-rindas/imagenes/blob/main/Readmes/striped/striped-mobile.png?raw=true" />
+<div>
+<img width="140px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/mob-demo1.png?raw=true" />
+<img width="140px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/mob-demo2.png?raw=true" />
+<img width="140px"  src="https://github.com/mloaizau/AtlantisGame/blob/master/docs/mob-demo3.png?raw=true" />
+</div>
 
 ## Disclaimer
 
