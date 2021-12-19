@@ -22,6 +22,10 @@ GamePlayManager = {
         game.load.image("booble1", 'assets/images/booble1.png');
         game.load.image("booble2", 'assets/images/booble2.png');
 
+        //botones
+        game.load.image("play", 'assets/images/play.png');
+        game.load.image("replay", 'assets/images/replay.png');
+
         // el sprite consta de tres variables, ancho, alto y cantidad de imagenes
         game.load.spritesheet('horse', 'assets/images/horse.png', 84, 156, 2); 
         game.load.spritesheet('diamonds', 'assets/images/diamonds.png', 81, 84, 4);
@@ -61,8 +65,7 @@ GamePlayManager = {
         // this.horse.angle = 0; // rota la imagen en grados, 90 grados
         // this.horse.scale.setTo(1) //cambia el tamaño del sprite
         // this.horse.alpha = 0.5;  // opacidad, 0 es para invisible y 1 para visible
-
-        game.input.onDown.add(this.onTap, this); //capturar un clic en pantalla
+        //game.input.onDown.add(this.onTap, this); //capturar un clic en pantalla
 
         this.diamonds = [];
         for(var i = 0; i < AMOUNT_DIAMONDS; i++){
@@ -140,6 +143,7 @@ GamePlayManager = {
                 }
             }
         }, this);
+        this.showInitMessage();
     },
     increaseScore: function(){
         this.countSmile = 0;
@@ -155,15 +159,40 @@ GamePlayManager = {
             this.showFinalMessage('CONGRATULATIONS');
         }
     },
+    showInitMessage: function(){
+        bgAlpha = game.add.bitmapData(game.width, game.height);
+        bgAlpha.ctx.fillStyle = '#000000';
+        bgAlpha.ctx.fillRect(0, 0, game.width, game.height);
+        this.bg = game.add.sprite(0, 0, bgAlpha);
+        this.bg.alpha = 0.5;
+
+        this.play = game.add.sprite(game.width/2, game.height/2, 'play');
+        this.play.anchor.setTo(0.5);
+        this.play.inputEnabled = true;
+        this.play.events.onInputDown.add(this.onPlay, this);
+
+        var style = {
+            font: 'bold 60pt Arial',
+            fill: '#FFFFFF',
+            align: 'center'
+        }
+        this.textFieldInitMsg = game.add.text(game.width/2, game.height/1.5, "PLAY", style);
+        this.textFieldInitMsg.anchor.setTo(0.5);
+    },
     showFinalMessage: function(msg){
         this.tweenMollusk.stop();
         this.musicLoop.stop();
-        var bgAlpha = game.add.bitmapData(game.width, game.height);
-        bgAlpha.ctx.fillStyle = '#000000';
-        bgAlpha.ctx.fillRect(0, 0, game.width, game.height);
-
-        var bg = game.add.sprite(0, 0, bgAlpha);
+        var bgBeta = game.add.bitmapData(game.width, game.height);
+        bgBeta.ctx.fillStyle = '#000000';
+        bgBeta.ctx.fillRect(0, 0, game.width, game.height);
+        var bg = game.add.sprite(0, 0, bgBeta);
         bg.alpha = 0.5;
+
+        this.replay = game.add.sprite(game.width/2, game.height/1.5, 'replay');
+        this.replay.anchor.setTo(0.5);
+        this.replay.inputEnabled = true;
+        this.replay.events.onInputDown.add(this.onRestart, this);
+
 
         var style = {
             font: 'bold 60pt Arial',
@@ -173,6 +202,16 @@ GamePlayManager = {
 
         this.textFieldFinalMsg = game.add.text(game.width/2, game.height/2, msg, style);
         this.textFieldFinalMsg.anchor.setTo(0.5);
+    },
+    onPlay: function(){
+        this.bg.kill();
+        this.play.kill();
+        this.textFieldInitMsg.kill();
+        this.onTap();
+    },
+    onRestart: function(){
+        console.log("restart");
+        game.state.start("gameplay");
     },
     onTap: function(){
         if (!this.flagFirstMouseDown) {
