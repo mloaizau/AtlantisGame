@@ -1,5 +1,5 @@
 
-var AMOUNT_DIAMONDS = 20;
+var AMOUNT_DIAMONDS = 30;
 var AMOUNT_BOOBLES = 30;
 GamePlayManager = {
     init: function() {
